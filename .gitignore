@@ -1,0 +1,10 @@
+
+# settings folder - Eclipse
+.settings/
+
+#bin output folder
+bin/
+
+# classpath
+.classpath
+.project
