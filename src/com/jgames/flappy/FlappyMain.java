@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
 
 import com.jgames.flappy.input.Input;
 
@@ -41,11 +42,14 @@ public class FlappyMain implements Runnable {
 
 	private void render() {
 		glfwSwapBuffers(window);
-
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	private void update() {
 		glfwPollEvents();
+		if (Input.keys[GLFW_KEY_SPACE]) {
+			System.out.println("Flap!!");
+		}
 
 	}
 
@@ -74,10 +78,19 @@ public class FlappyMain implements Runnable {
 			// TODO handle
 		}
 
+		// create gl content in current window
+		glfwMakeContextCurrent(window);
+		GL.createCapabilities();
+
 		glfwSetKeyCallback(window, new Input());
 
 		glfwMakeContextCurrent(window);
 		glfwShowWindow(window);
+
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glEnable(GL_DEPTH_TEST);
+
+		System.out.println("OpenGL version : " + glGetString(GL_VERSION));
 
 	}
 
