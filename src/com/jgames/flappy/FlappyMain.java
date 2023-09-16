@@ -1,12 +1,12 @@
 package com.jgames.flappy;
 
-import java.nio.ByteBuffer;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.system.MemoryUtil;
+
+import com.jgames.flappy.input.Input;
 
 public class FlappyMain implements Runnable {
 
@@ -18,7 +18,7 @@ public class FlappyMain implements Runnable {
 	private long window;
 
 	public void start() {
-
+		running = true;
 		Thread thread = new Thread(this, "FlappyMain");
 		thread.start();
 	}
@@ -32,36 +32,52 @@ public class FlappyMain implements Runnable {
 		while (running) {
 			update();
 			render();
+
+			if (glfwWindowShouldClose(window)) {
+				running = false;
+			}
 		}
 	}
 
 	private void render() {
-		// TODO Auto-generated method stub
+		glfwSwapBuffers(window);
 
 	}
 
 	private void update() {
-		// TODO Auto-generated method stub
+		glfwPollEvents();
 
 	}
 
 	// initialize game and openGL thread
 	private void init() {
-		if (!GLFW.glfwInit()) {
+		if (glfwInit()) {
 			// handle if cannot be initiated
 		}
 
-		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_TRUE);
+		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 		// long window = pointer to window in native so we can use it later to
 		// manipulate or tweak it
-		window = GLFW.glfwCreateWindow(width, height, "Flappy", MemoryUtil.NULL, MemoryUtil.NULL);
+		window = glfwCreateWindow(width, height, "Flappy", NULL, NULL);
 
-		if (window == MemoryUtil.NULL) {
-			// handle
+		if (window == NULL) {
+			// TODO handle
 		}
 
-		GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+		GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+		// get to the center in windowed mode
+		glfwSetWindowPos(window, (vidMode.width() - width) / 2, (vidMode.height() - height) / 2);
+
+		if (window == NULL) {
+			// TODO handle
+		}
+
+		glfwSetKeyCallback(window, new Input());
+
+		glfwMakeContextCurrent(window);
+		glfwShowWindow(window);
 
 	}
 
